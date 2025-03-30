@@ -69,12 +69,13 @@ public class SQLiteConnectionManager {
 
             }
         } catch (SQLException e) {
+            logger.log(Level.SEVERE,"Your message.", e);
             System.out.println(e.getMessage());
         }
     }
 
     /**
-     * Check that the file has been cr3eated
+     * Check that the file has been created
      *
      * @return true if the file exists in the correct location, false otherwise. If
      *         no url defined, also false.
@@ -88,6 +89,7 @@ public class SQLiteConnectionManager {
                     return true;
                 }
             } catch (SQLException e) {
+                logger.log(Level.SEVERE,"Your message.", e);
                 System.out.println(e.getMessage());
                 return false;
             }
@@ -113,6 +115,7 @@ public class SQLiteConnectionManager {
                 return true;
 
             } catch (SQLException e) {
+                logger.log(Level.SEVERE,"Your message.", e);
                 System.out.println(e.getMessage());
                 return false;
             }
@@ -127,15 +130,16 @@ public class SQLiteConnectionManager {
      */
     public void addValidWord(int id, String word) {
 
-        String sql = "INSERT INTO validWords(id,word) VALUES(?, ?)";
+        String sql = "INSERT INTO validWords(id,word) VALUES(?,?)";
 
         try (Connection conn = DriverManager.getConnection(databaseURL);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1,id);
+            
+            pstmt.setInt(1, id);
             pstmt.setString(2, word);
             pstmt.executeUpdate();
         } catch (SQLException e) {
+            logger.log(Level.INFO,"Valid input", e);
             System.out.println(e.getMessage());
         }
 
@@ -152,8 +156,8 @@ public class SQLiteConnectionManager {
 
         try (Connection conn = DriverManager.getConnection(databaseURL);
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setString(1, guess);
+
+            stmt.setString(1, guess);        
             ResultSet resultRows = stmt.executeQuery();
             if (resultRows.next()) {
                 int result = resultRows.getInt("total");
@@ -163,6 +167,7 @@ public class SQLiteConnectionManager {
             return false;
 
         } catch (SQLException e) {
+            logger.log(Level.SEVERE,"Your message.", e);
             System.out.println(e.getMessage());
             return false;
         }
